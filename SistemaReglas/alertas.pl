@@ -30,12 +30,23 @@ amarresOcupados(20, puerto1).
 /* reglas */
 /* alertas alta prioridad */
 
-alerta(limpieza, Region) :- detectado(basura, Region). % alerta de limpieza basura 
-alerta(aforo, Region) :- aforo_act(Region, N), aforo_max(Region, M), N > M. % alerta por superar aforo
-alerta(Objeto, Region) :- detectado(Objeto, Region), (prohibido(Objeto, Region); area_prohibida(Region)). % alerta persona/objeto en zona prohibida
-alerta(personaEnPeligro, Region) :- detectado(persona, Region), bandera(roja, Region). % alerta bañista en zona con bandera roja
+/* alerta de limpieza basura */
+alerta(limpieza, Region) :- detectado(basura, Region).
+
+/* alerta por superar aforo */
+alerta(aforo, Region) :- aforo_act(Region, N), aforo_max(Region, M), N > M.
+
+/* alerta persona/objeto en zona prohibida */
+alerta(Objeto, Region) :- detectado(Objeto, Region), (prohibido(Objeto, Region); area_prohibida(Region)).
+
+/* alerta bañista en zona con bandera roja */
+alerta(personaEnPeligro, Region) :- detectado(persona, Region), bandera(roja, Region).
+
+/* alerta cuando el oleaje es fuerte y no hay bandera roja */
 alerta(oleaje, Region) :- oleaje(fuerte, Region), not(bandera(roja, Region)).
-alerta(barcoNoIdentificado, Region) :- detectado(barcoNoIdentificado, Region). % detección de posible patera o narco lancha
+
+/* detección de posible patera o narco lancha */
+alerta(barcoNoIdentificado, Region) :- detectado(barcoNoIdentificado, Region).
 
 alertar(Sujeto, Motivo, Lugar) :- alerta(Motivo, Lugar), responsable(Sujeto, Motivo).
 
